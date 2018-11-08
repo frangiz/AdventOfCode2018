@@ -1,0 +1,5 @@
+__pychache_/
+.venv/
+.vscode/
+*.pyc
+*.swp
