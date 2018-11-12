@@ -1,5 +1,6 @@
 import argparse
 import unittest
+import sys
 from test.time_logging_test_runner import TimeLoggingTestRunner
 
 tests_abbreviations = {
@@ -42,4 +43,5 @@ def main():
 
 
 if __name__ == '__main__':
+    assert sys.version_info >= (3,7)
     main()

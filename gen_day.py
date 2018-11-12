@@ -4,6 +4,7 @@ import re
 import urllib.request
 
 day_template = '''\"\"\"--- Day {0}: {1} ---\"\"\"
+import helpers
 
 
 def part_a(puzzle_input):
@@ -41,35 +42,33 @@ test_day_template = '''\"\"\"The tests for day{0}.\"\"\"
 from days import day{0}
 from ddt import ddt, data, unpack
 import unittest
-import util
+import helpers
 
 
 @ddt
 class MyTestCase(unittest.TestCase): # noqa D101
     @data(
         [],
-        []
-        )
+        [])
     @unpack
     def test_example_a(self, test_input, expected): # noqa D102
         result = day{0}.part_a(test_input)
         self.assertEqual(result, expected)
 
     def test_answer_part_a(self): # noqa D102
-        result = day{0}.part_a(util.get_file_contents('day{0}.txt'))
+        result = day{0}.part_a(helpers.get_file_contents('day{0}.txt'))
         self.assertEqual(result, '')
 
     @data(
         [],
-        []
-        )
+        [])
     @unpack
     def test_example_b(self, test_input, expected): # noqa D102
         result = day{0}.part_b(test_input)
         self.assertEqual(result, expected)
 
     def test_answer_part_b(self): # noqa D102
-        result = day{0}.part_b(util.get_file_contents('day{0}.txt'))
+        result = day{0}.part_b(helpers.get_file_contents('day{0}.txt'))
         self.assertEqual(result, '')
 '''
 
