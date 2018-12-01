@@ -1,5 +1,6 @@
 """--- Day 01: Chronal Calibration ---"""
 import helpers
+from itertools import cycle
 
 
 def part_a(puzzle_input):
@@ -12,10 +13,7 @@ def part_a(puzzle_input):
         string: The answer for part_a.
 
     """
-    exp = ''
-    for l in puzzle_input:
-        exp += l.strip()
-    return str(eval(exp))
+    return str(sum(helpers.to_ints(puzzle_input)))
 
 
 def part_b(puzzle_input):
@@ -28,18 +26,15 @@ def part_b(puzzle_input):
         string: The answer for part_b.
 
     """
-    visited = []
-    val = 0
-    visited.append(0)
-    while True:
-        for l in puzzle_input:
-            if l .startswith('+'):
-                val += int(l[1:])
-            elif l.startswith('-'):
-                val -= int(l[1:])
-            if val in visited:
-                return str(val)
-            visited.append(val)
+    visited = set()
+    freq = 0
+    visited.add(freq)
+    changes = helpers.to_ints(puzzle_input)
+    for change in cycle(changes):
+        freq += change
+        if freq in visited:
+            return str(freq)
+        visited.add(freq)
     return str(0)
 
 
