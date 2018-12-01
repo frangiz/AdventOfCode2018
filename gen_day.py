@@ -72,7 +72,7 @@ class MyTestCase(unittest.TestCase): # noqa D101
         self.assertEqual(result, '')
 '''
 
-readme_line_template = '\n|[Day {0}: {1}](http://adventofcode.com/2018/day/{0}) | [day{0}.py](days/day{0}.py) | --- |'
+readme_line_template = '\n|[Day {2}: {1}](http://adventofcode.com/2018/day/{2}) | [day{0}.py](days/day{0}.py) | --- |'
 
 
 def regenerate_days_init_file(number_of_days):
@@ -127,7 +127,7 @@ def create_files(day, dayname):
             pass
     if os.path.isfile('README.md'):
         with open('README.md', 'a') as f:
-            f.write(readme_line_template.format(day, dayname))
+            f.write(readme_line_template.format(day, dayname, int(day)))
     regenerate_days_init_file(int(day))
 
 
