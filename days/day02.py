@@ -35,10 +35,10 @@ def part_a(puzzle_input):
     twos = 0
     threes = 0
     for line in puzzle_input:
-        c = Counter(line)
-        if len([o for o in c.most_common() if o[1] == 2]):
+        occurrences = [n for c, n in Counter(line).most_common()]
+        if 2 in occurrences:
             twos += 1
-        if len([o for o in c.most_common() if o[1] == 3]):
+        if 3 in occurrences:
             threes += 1
     return str(twos * threes)
 
