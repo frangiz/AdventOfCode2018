@@ -11,3 +11,4 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 | Day | Solution | Note |
 |-----|----------|------|
 |[Day 1: Chronal Calibration](http://adventofcode.com/2018/day/1) | [day01.py](days/day01.py) | --- |
+|[Day 2: Inventory Management System](http://adventofcode.com/2018/day/2) | [day02.py](days/day02.py) | --- |

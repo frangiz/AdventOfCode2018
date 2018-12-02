@@ -1,1 +1,1 @@
-__all__ = [ "day01" ] # noqa D104
+__all__ = [ "day01", "day02" ] # noqa D104
