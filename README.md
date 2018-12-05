@@ -14,3 +14,4 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 2: Inventory Management System](http://adventofcode.com/2018/day/2) | [day02.py](days/day02.py) | --- |
 |[Day 3: No Matter How You Slice It](http://adventofcode.com/2018/day/3) | [day03.py](days/day03.py) | --- |
 |[Day 4: Repose Record](http://adventofcode.com/2018/day/4) | [day04.py](days/day04.py) | --- |
+|[Day 5: Alchemical Reduction](http://adventofcode.com/2018/day/5) | [day05.py](days/day05.py) | --- |
