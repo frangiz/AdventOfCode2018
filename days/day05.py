@@ -1,27 +1,30 @@
 """--- Day 05: Alchemical Reduction ---"""
 import string
 
+pairs = {}
+for c in string.ascii_lowercase:
+    pairs[c] = c.upper()
+    pairs[c.upper()] = c
 
-def compress(result):
-    last_len = len(result)
-    while True:
-        new_result = []
-        index = 0
-        while index < len(result) - 1:
-            c1 = ord(result[index])
-            c2 = ord(result[index + 1])
-            if abs(c1 - c2) == 32:
-                index += 2
-            else:
-                new_result.append(chr(c1))
-                index += 1
-        if index == len(result) - 1:
-            new_result.append(result[index])
-        result = ''.join(new_result)
-        if len(result) == last_len:
-            break
-        last_len = len(result)
-    return len(result)
+
+def compress(input_str):
+    """
+    Compresses the input. If a pair is removed, it checks the newly created
+    space if a new pair can be removed before advancing.
+
+    Args:
+        input_str (str): The string to compress.
+    Returns:
+        list: A list of chars of the compressed result.
+    """
+    result = ['\0']
+    for c in input_str:
+        if pairs[c] == result[-1]:
+            result.pop()
+        else:
+            result.append(c)
+
+    return result[1:]
 
 
 def part_a(puzzle_input):
@@ -35,8 +38,7 @@ def part_a(puzzle_input):
 
     """
     result = ''.join(puzzle_input)
-    
-    return str(compress(result))
+    return str(len(compress(result)))
 
 
 def part_b(puzzle_input):
@@ -50,10 +52,10 @@ def part_b(puzzle_input):
 
     """
     result = ''.join(puzzle_input)
-    min_len = 10000000000
+    min_len = 10**7
     for c in string.ascii_lowercase:
-        new_polymer = result.replace(c, '').replace(chr(ord(c) - 32), '')
-        len_compressed = compress(new_polymer)
+        new_polymer = result.replace(c, '').replace(c.upper(), '')
+        len_compressed = len(compress(new_polymer))
         if len_compressed < min_len:
             min_len = min(min_len, len_compressed)
     return str(min_len)
