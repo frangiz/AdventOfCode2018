@@ -39,6 +39,10 @@ def get_adjecent_8(pos, valid=lambda point: True):
     return neighbours
 
 
+def get_manhattan_dist(pos1, pos2):
+    return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y)
+
+
 def clamp(value, min_, max_):
     '''
     Clamp the value so that it is at least min_ and at most max_
