@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase): # noqa D101
         [['1, 1', '1, 6', '8, 3', '3, 4', '5, 5', '8, 9'], '16'])
     @unpack
     def test_example_b(self, test_input, expected): # noqa D102
-        result = day06.part_b(test_input)
+        result = day06.part_b(test_input, 32)
         self.assertEqual(result, expected)
 
     def test_answer_part_b(self): # noqa D102

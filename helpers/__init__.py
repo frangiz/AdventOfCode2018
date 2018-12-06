@@ -40,6 +40,11 @@ def get_adjecent_8(pos, valid=lambda point: True):
 
 
 def get_manhattan_dist(pos1, pos2):
+    '''
+    Calculates the manhattan distance between two points. Calling such
+    a simple method increases the overhead and should more be seen as
+    a reference implementation or called very infrequently.
+    '''
     return abs(pos1.x - pos2.x) + abs(pos1.y - pos2.y)
 
 
