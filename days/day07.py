@@ -62,7 +62,7 @@ def part_b(puzzle_input, workers=5, offset=60):
         nonlocal queue
         while len(processing) < workers and queue:
             c = min(queue)
-            queue = [e for e in queue if e != c]
+            queue.remove(c)
             processing.append((string.ascii_uppercase.index(c) + 1 + t + offset, c))
 
     for dep in deps:
