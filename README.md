@@ -17,3 +17,4 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 5: Alchemical Reduction](http://adventofcode.com/2018/day/5) | [day05.py](days/day05.py) | --- |
 |[Day 6: Chronal Coordinates](http://adventofcode.com/2018/day/6) | [day06.py](days/day06.py) | --- |
 |[Day 7: The Sum of Its Parts](http://adventofcode.com/2018/day/7) | [day07.py](days/day07.py) | --- |
+|[Day 8: Memory Maneuver](http://adventofcode.com/2018/day/8) | [day08.py](days/day08.py) | --- |
