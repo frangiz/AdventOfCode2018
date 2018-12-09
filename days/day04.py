@@ -29,7 +29,7 @@ def get_sleeps_mins_for_guards(puzzle_input):
     current_guard_id = 0
     for ts, action in parse(puzzle_input):
         if action.startswith('Guard'):
-           current_guard_id = int(action.split()[1][1:])
+            current_guard_id = int(action.split()[1][1:])
         elif action.startswith('falls asleep'):
             start_to_sleep = ts
         elif action.startswith('wakes up'):
