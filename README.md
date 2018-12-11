@@ -20,3 +20,4 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 8: Memory Maneuver](http://adventofcode.com/2018/day/8) | [day08.py](days/day08.py) | --- |
 |[Day 9: Marble Mania](http://adventofcode.com/2018/day/9) | [day09.py](days/day09.py) | --- |
 |[Day 10: The Stars Align](http://adventofcode.com/2018/day/10) | [day10.py](days/day10.py) | Need to break loop when the answer is found. Hard to test at the moment. Need to revisit. |
+|[Day 11: Chronal Charge](http://adventofcode.com/2018/day/11) | [day11.py](days/day11.py) | The solution takes "forever" to run. |
