@@ -13,6 +13,35 @@ class Cart():
     def __repr__(self):
         return "{}({!r})".format(self.__class__.__name__, self.__dict__)
 
+    def tick(self, path_section):
+        if path_section == '\\':
+                self.dx, self.dy = self.dy, self.dx
+        elif path_section == '/':
+            self.dx, self.dy = -self.dy, -self.dx
+        elif path_section == '+':
+            if self.turn == 0:
+                self.dx, self.dy = self.dy, -self.dx
+            elif self.turn == 1:
+                pass  # Just continue straight
+            elif self.turn == 2:
+                self.dx, self.dy = -self.dy, self.dx
+            self.turn = (self.turn + 1) % 3
+
+
+def create_carts(tracks):
+    carts = []
+    for y in range(len(tracks)):
+        for x, c in enumerate(tracks[y]):
+            if c == '<':
+                carts.append(Cart(x, y, -1, 0))
+            elif c == '>':
+                carts.append(Cart(x, y, 1, 0))
+            elif c == '^':
+                carts.append(Cart(x, y, 0, -1))
+            elif c == 'v':
+                carts.append(Cart(x, y, 0, 1))
+    return carts
+
 
 def part_a(puzzle_input):
     """
@@ -25,17 +54,7 @@ def part_a(puzzle_input):
 
     """
     tracks = [[a for a in line.rstrip('\n')] for line in puzzle_input]
-    carts = []
-    for y in range(len(tracks)):
-        for x, c in enumerate(tracks[y]):
-            if c == '<':
-                carts.append(Cart(x, y, -1, 0))
-            elif c == '>':
-                carts.append(Cart(x, y, 1, 0))
-            elif c == '^':
-                carts.append(Cart(x, y, 0, -1))
-            elif c == 'v':
-                carts.append(Cart(x, y, 0, 1))
+    carts = create_carts(tracks)
     while True:
         carts.sort(key=lambda c: (c.y, c.x))
         for cart in carts:
@@ -44,19 +63,7 @@ def part_a(puzzle_input):
             got_collision = any(cart.x == c.x and cart.y == c.y and cart is not c for c in carts)
             if got_collision:
                 return '{},{}'.format(cart.x, cart.y)
-            if tracks[cart.y][cart.x] == '\\':
-                cart.dx, cart.dy = cart.dy, cart.dx
-            elif tracks[cart.y][cart.x] == '/':
-                cart.dx, cart.dy = -cart.dy, -cart.dx
-            elif tracks[cart.y][cart.x] == '+':
-                if cart.turn == 0:
-                    cart.dx, cart.dy = cart.dy, -cart.dx
-                elif cart.turn == 1:
-                    pass  # Just continue straight
-                elif cart.turn == 2:
-                    cart.dx, cart.dy = -cart.dy, cart.dx
-                cart.turn = (cart.turn + 1) % 3
-
+            cart.tick(tracks[cart.y][cart.x])
     return str(0)
 
 
@@ -71,17 +78,7 @@ def part_b(puzzle_input):
 
     """
     tracks = [[a for a in line.rstrip('\n')] for line in puzzle_input]
-    carts = []
-    for y in range(len(tracks)):
-        for x, c in enumerate(tracks[y]):
-            if c == '<':
-                carts.append(Cart(x, y, -1, 0))
-            elif c == '>':
-                carts.append(Cart(x, y, 1, 0))
-            elif c == '^':
-                carts.append(Cart(x, y, 0, -1))
-            elif c == 'v':
-                carts.append(Cart(x, y, 0, 1))
+    carts = create_carts(tracks)
     while len(carts) > 1:
         carts.sort(key=lambda c: (c.y, c.x))
         for cart in carts:
@@ -91,18 +88,7 @@ def part_b(puzzle_input):
             if other_cart:
                 cart.alive = False
                 other_cart.alive = False
-            if tracks[cart.y][cart.x] == '\\':
-                cart.dx, cart.dy = cart.dy, cart.dx
-            elif tracks[cart.y][cart.x] == '/':
-                cart.dx, cart.dy = -cart.dy, -cart.dx
-            elif tracks[cart.y][cart.x] == '+':
-                if cart.turn == 0:
-                    cart.dx, cart.dy = cart.dy, -cart.dx
-                elif cart.turn == 1:
-                    pass  # Just continue straight
-                elif cart.turn == 2:
-                    cart.dx, cart.dy = -cart.dy, cart.dx
-                cart.turn = (cart.turn + 1) % 3
+            cart.tick(tracks[cart.y][cart.x])
         carts = [c for c in carts if c.alive]
     if len(carts) == 1:
         return '{},{}'.format(carts[0].x, carts[0].y)
