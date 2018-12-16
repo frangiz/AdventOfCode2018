@@ -1,5 +1,5 @@
 import os
-from collections import namedtuple, deque
+from collections import namedtuple
 
 
 def get_file_contents(filename):
@@ -67,47 +67,3 @@ def to_ints(container):
 
     t = type(container)
     return t(map(int, container))
-
-
-def shortest_path(start, end, valid_pos=lambda point: True):
-    class Node:
-        def __init__(self, pos, length, parent):
-            self.pos = pos
-            self.length = length
-            self.parent = parent
-
-        def __repr__(self):
-            return "{}({!r})".format(self.__class__.__name__, self.__dict__)
-
-    visited = set()
-    unvisited = deque()
-    unvisited.append(Node(start, 0, None))
-    reached_the_end = False
-    solutions = []
-    while unvisited:
-        node = unvisited.popleft()
-        visited.add(node.pos)
-        if node.pos == end:
-            if len(solutions) == 0:
-                solutions.append(node)
-                reached_the_end = True
-            elif solutions[0].length == node.length:
-                solutions.append(node)
-        if not reached_the_end:
-            for neighbour in get_adjecent_4(node.pos):
-                if neighbour not in visited:
-                    if neighbour == end:
-                        unvisited.append(Node(neighbour, node.length + 1, node))
-                    elif valid_pos(neighbour):
-                        unvisited.append(Node(neighbour, node.length + 1, node))
-    # Convert the nodes that reached the end to a list of points
-    result = []
-    for node in solutions:
-        path = []
-        while node.parent is not None:
-            path.append(node.pos)
-            node = node.parent
-        path.append(node.pos)
-        path.reverse()
-        result.append(path)
-    return result

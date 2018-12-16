@@ -1,47 +1,37 @@
 """--- Day 15: Beverage Bandits ---"""
-import helpers
+from helpers import Point, get_adjecent_4
+import enum
+from collections import deque
+
+
+class Team(enum.Enum):
+    ELF = enum.auto()
+    GOBLIN = enum.auto()
 
 
 class Unit():
-    def __init__(self, pos):
+    def __init__(self, pos, team):
         self.pos = pos
         self.attack_power = 3
         self.hp = 200
         self.alive = True
+        self.team = team
 
     def __repr__(self):
         return "{}({!r})".format(self.__class__.__name__, self.__dict__)
 
     def attack(self, other):
         other.hp -= self.attack_power
-
-
-class Elf(Unit):
-    def __init__(self, pos):
-        super().__init__(pos)
-
-    def __repr__(self):
-        return "{}({!r})".format(self.__class__.__name__, self.__dict__)
+        if other.hp <= 0:
+            other.alive = False
 
     def get_stats(self):
-        return 'E({})'.format(self.hp)
-
-
-class Goblin(Unit):
-    def __init__(self, pos):
-        super().__init__(pos)
-
-    def __repr__(self):
-        return "{}({!r})".format(self.__class__.__name__, self.__dict__)
-
-    def get_stats(self):
-        return 'G({})'.format(self.hp)
+        return '{}({})'.format(self.team, self.hp)
 
 
 class FightSimulator():
     def __init__(self, puzzle_input):
-        self.elves = []
-        self.goblins = []
+        self.units = []
         self.walls = set()
         self.round = 0
         self.__parse_map(puzzle_input)
@@ -50,96 +40,86 @@ class FightSimulator():
         for y in range(len(puzzle_input)):
             for x, c in enumerate(puzzle_input[y]):
                 if c == 'E':
-                    self.elves.append(Elf(helpers.Point(x, y)))
+                    self.units.append(Unit(Point(x, y), Team.ELF))
                 elif c == 'G':
-                    self.goblins.append(Goblin(helpers.Point(x, y)))
+                    self.units.append(Unit(Point(x, y), Team.GOBLIN))
                 elif c == '#':
-                    self.walls.add(helpers.Point(x, y))
+                    self.walls.add(Point(x, y))
 
     def tick(self):
-        self.round += 1
-        turn_order = self.__get_turn_order()
-        for unit in turn_order:
-            self.__try_move(unit)
-            self.__try_attack(unit)
+        complete_round = True
+        for unit in sorted(self.units, key=lambda u: (u.pos.y, u.pos.x)):
+            if unit.alive:
+                print('Activating unit: {}'.format(unit))
+                if self.__has_enemies(unit):
+                    self.__try_move(unit)
+                    self.__try_attack(unit)
+                else:
+                    complete_round = False
+                    break
+        self.units = [u for u in self.units if u.alive]
+        if complete_round:
+            self.round += 1
 
-    def __get_turn_order(self):
-        sorted_units = []
-        max_x = max(self.walls, key=lambda p: p.x).x
-        max_y = max(self.walls, key=lambda p: p.y).y
-        for y in range(max_y + 1):
-            for x in range(max_x + 1):
-                unit = self.__get_unit_at_pos(helpers.Point(x, y))
-                if unit and unit.alive:
-                    sorted_units.append(unit)
-        return sorted_units
-
-    def __get_unit_at_pos(self, pos):
-        elf = next((e for e in self.elves if e.pos == pos), None)
-        goblin = next((g for g in self.goblins if g.pos == pos), None)
-        if elf:
-            return elf
-        elif goblin:
-            return goblin
-        return None
+    def __has_enemies(self, unit):
+        return any(u for u in self.units if u.team != unit.team and u.alive)
 
     def __try_attack(self, unit):
-        if type(unit) == Elf:
-            adjacent_enemies = self.__get_adjacent_enemies(unit.pos, self.goblins)
-        elif type(unit) == Goblin:
-            adjacent_enemies = self.__get_adjacent_enemies(unit.pos, self.elves)
+        adjacent_enemies = self.__get_adjacent_enemies(unit)
         if len(adjacent_enemies) > 0:
             unit.attack(adjacent_enemies[0])
 
-    def __get_adjacent_enemies(self, pos, enemies):
-        adjacent_positions = helpers.get_adjecent_4(pos)
-        adjacent_enemies = [e for e in enemies if e.pos in adjacent_positions]
+    def __get_adjacent_enemies(self, unit):
+        adjacent_enemies = []
+        for pos in get_adjecent_4(unit.pos):
+            enemy = next((e for e in self.units if
+                          e.team != unit.team and e.alive and 
+                          e.pos.x == pos.x and e.pos.y == pos.y), None)
+            if enemy:
+                adjacent_enemies.append(enemy)
         adjacent_enemies.sort(key=lambda u: (u.hp, u.pos.y, u.pos.x))
         return adjacent_enemies
 
     def __try_move(self, unit):
-        if type(unit) == Elf:
-            adjacent_enemies = self.__get_adjacent_enemies(unit.pos, self.goblins)
-        elif type(unit) == Goblin:
-            adjacent_enemies = self.__get_adjacent_enemies(unit.pos, self.elves)
+        adjacent_enemies = self.__get_adjacent_enemies(unit)
         if len(adjacent_enemies) == 0:
-            path = self.__find_shortest_path(unit)
+            path = self.__find_closest_enemy(unit)
             if path:
                 unit.pos = path[1]
 
-    def __find_shortest_path(self, unit):
-        paths = self.__find_paths_to_enemies(unit)
-        shortest_paths = []
-        min_length = 10**5
-        for p in paths:
-            if len(p) <= min_length:
-                shortest_paths.append(p)
-                min_length = len(p)
-        # TODO: sort the paths
-        if len(shortest_paths) == 0:
+    def __find_closest_enemy(self, unit):
+        class Node:
+            def __init__(self, pos, length, parent):
+                self.pos = pos
+                self.length = length
+                self.parent = parent
+        unvisited = deque()
+        solution = None
+        targets = [u.pos for u in self.units if u.team != unit.team and u.alive]
+        unvisited.append(Node(unit.pos, 0, None))
+        visited = set()
+        team_mates = set([u.pos for u in self.units if u.team == unit.team and u.alive])
+        while unvisited:
+            node = unvisited.popleft()
+            if node.pos in targets:
+                solution = node
+                break
+            visited.add(node.pos)
+            for new_position in sorted(get_adjecent_4(node.pos), key=lambda p: (p.y, p.x)):
+                if new_position not in self.walls and new_position not in visited and new_position not in team_mates:
+                    unvisited.append(Node(new_position, node.length + 1, node))
+        if solution is None:
             return None
-        return shortest_paths[0]
-
-    def __find_paths_to_enemies(self, unit):
-        if type(unit) == Elf:
-            paths = []
-            for enemy in self.goblins:
-                for path in helpers.shortest_path(unit.pos, enemy.pos, self.__is_open_space):
-                    paths.append(path)
-            return paths
-
-        if type(unit) == Goblin:
-            paths = []
-            for enemy in self.elves:
-                for path in helpers.shortest_path(unit.pos, enemy.pos, self.__is_open_space):
-                    paths.append(path)
-            return paths
-        return []
+        path = []
+        while node.parent is not None:
+            path.append(node.pos)
+            node = node.parent
+        path.append(node.pos)
+        path.reverse()
+        return path
 
     def __is_open_space(self, pos):
-        if pos in [elf.pos for elf in self.elves]:
-            return False
-        if pos in [goblin.pos for goblin in self.goblins]:
+        if pos in [unit.pos for unit in self.units if unit.alive]:
             return False
         if pos in self.walls:
             return False
@@ -152,22 +132,34 @@ class FightSimulator():
         for y in range(max_y + 1):
             stats = []
             for x in range(max_x + 1):
-                p = helpers.Point(x, y)
-                elf = next((e for e in self.elves if e.pos == p), None)
-                goblin = next((g for g in self.goblins if g.pos == p), None)
+                p = Point(x, y)
+                unit = next((u for u in self.units if u.pos == p and u.alive), None)
                 if p in self.walls:
                     print('#', end='')
-                elif elf:
-                    print('E', end='')
-                    stats.append(elf.get_stats())
-                elif goblin:
-                    print('G', end='')
-                    stats.append(goblin.get_stats())
+                elif unit:
+                    print('{}'.format('E' if unit.team == Team.ELF else 'G'), end='')
+                    stats.append(unit.get_stats())
                 else:
                     print('.', end='')
             print(' ' * 3, end='')
             print(', '.join(stats))
         print('')
+
+    def calc_outcome(self):
+        while True:
+            self.tick()
+            elves_alive = len([e for e in self.units if e.team == Team.ELF and e.alive])
+            goblins_alive = len([g for g in self.units if g.team == Team.GOBLIN and g.alive])
+            print('elves: {}, goblins: {}'.format(elves_alive, goblins_alive))
+            if len([e for e in self.units if e.team == Team.ELF and e.alive]) == 0:
+                print('rounds: {}'.format(self.round))
+                print(self.print())
+                return sum(g.hp for g in self.units if g.alive and g.team == Team.GOBLIN) * self.round
+            if len([g for g in self.units if g.team == Team.GOBLIN and g.alive]) == 0:
+                print('rounds: {}'.format(self.round))
+                print(self.print())
+                return sum(e.hp for e in self.units if e.alive and e.team == Team.ELF) * self.round
+        return 0
 
 
 def part_a(puzzle_input):
@@ -181,12 +173,7 @@ def part_a(puzzle_input):
 
     """
     sim = FightSimulator(puzzle_input)
-    sim.print()
-    sim.tick()
-    for _ in range(30):
-        sim.print()
-        sim.tick()
-    return str(0)
+    return str(sim.calc_outcome())
 
 
 def part_b(puzzle_input):
