@@ -24,4 +24,5 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 12: Subterranean Sustainability](http://adventofcode.com/2018/day/12) | [day12.py](days/day12.py) | --- |
 |[Day 13: Mine Cart Madness](http://adventofcode.com/2018/day/13) | [day13.py](days/day13.py) | --- |
 |[Day 14: Chocolate Charts](http://adventofcode.com/2018/day/14) | [day14.py](days/day14.py) | --- |
-|[Day 15: Beverage Bandits](http://adventofcode.com/2018/day/15) | [day15.py](days/day15.py) | --- |
+|[Day 15: Beverage Bandits](http://adventofcode.com/2018/day/15) | [day15.py](days/day15.py) | Out or memory for some reason. |
+|[Day 16: Chronal Classification](http://adventofcode.com/2018/day/16) | [day16.py](days/day16.py) | TODO |
