@@ -20,7 +20,7 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 8: Memory Maneuver](http://adventofcode.com/2018/day/8) | [day08.py](days/day08.py) | --- |
 |[Day 9: Marble Mania](http://adventofcode.com/2018/day/9) | [day09.py](days/day09.py) | --- |
 |[Day 10: The Stars Align](http://adventofcode.com/2018/day/10) | [day10.py](days/day10.py) | Need to break loop when the answer is found. Hard to test at the moment. Need to revisit. |
-|[Day 11: Chronal Charge](http://adventofcode.com/2018/day/11) | [day11.py](days/day11.py) | The solution takes "forever" to run. |
+|[Day 11: Chronal Charge](http://adventofcode.com/2018/day/11) | [day11.py](days/day11.py) | The solution takes "forever" to run. Summed-area table might be something to look at. |
 |[Day 12: Subterranean Sustainability](http://adventofcode.com/2018/day/12) | [day12.py](days/day12.py) | --- |
 |[Day 13: Mine Cart Madness](http://adventofcode.com/2018/day/13) | [day13.py](days/day13.py) | --- |
 |[Day 14: Chocolate Charts](http://adventofcode.com/2018/day/14) | [day14.py](days/day14.py) | --- |
