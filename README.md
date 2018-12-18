@@ -27,3 +27,4 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 15: Beverage Bandits](http://adventofcode.com/2018/day/15) | [day15.py](days/day15.py) | Out or memory for some reason. |
 |[Day 16: Chronal Classification](http://adventofcode.com/2018/day/16) | [day16.py](days/day16.py) | --- |
 |[Day 17: Reservoir Research](http://adventofcode.com/2018/day/17) | [day17.py](days/day17.py) | --- |
+|[Day 18: Settlers of The North Pole](http://adventofcode.com/2018/day/18) | [day18.py](days/day18.py) | --- |
