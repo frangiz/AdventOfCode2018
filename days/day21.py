@@ -72,6 +72,8 @@ class Device():
             self.ip = self.registers[self.ip_register] + 1
             lines_executed[self.ip] += 1
             counter += 1
+            if self.ip == 28:
+                print(self.registers)
             if self.registers[4] > self.registers[2]:
                 print(self.registers)
                 #print(lines_executed)
@@ -110,7 +112,7 @@ class Device():
 
                 setr 1 7 2      <-- registers[2] = registers[1]
                 seti 7 2 5      <-- registers[5] = 7
-                eqrr 3 0 1      <-- registers[1] = registers[3] == registers[0]
+                eqrr 3 0 1      <-- registers[1] = registers[3] == registers[0] <-- part a => what is registers[3] here?
                 addr 1 5 5      <-- registers[5] += registers[1]
                 seti 5 5 5      <-- registers[5] = 5
             '''
