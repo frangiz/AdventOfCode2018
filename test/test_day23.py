@@ -28,8 +28,13 @@ class MyTestCase(unittest.TestCase): # noqa D101
         self.assertEqual(result, '297')
 
     @data(
-        [],
-        [])
+        [[
+            'pos=<10,12,12>, r=2',
+            'pos=<12,14,12>, r=2',
+            'pos=<16,12,12>, r=4',
+            'pos=<14,14,14>, r=6',
+            'pos=<50,50,50>, r=200',
+            'pos=<10,10,10>, r=5'], '36'])
     @unpack
     def test_example_b(self, test_input, expected): # noqa D102
         result = day23.part_b(test_input)

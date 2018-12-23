@@ -37,6 +37,13 @@ def part_b(puzzle_input):
         string: The answer for part_b.
 
     """
+    nanobots = []
+    for line in puzzle_input:
+        x, y, z, r = map(int, re.findall(r"([-\d]+)", line))
+        nanobots.append((x, y, z, r))
+
+    print('bah!')
+
     return str(0)
 
 
