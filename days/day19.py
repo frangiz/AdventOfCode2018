@@ -65,13 +65,21 @@ class Device():
         while 0 <= self.ip < len(self.instructions):
             op, a, b, c = self.instructions[self.ip].split()
             if optimize and self.ip == 1:
+                # We are calculating the sum of all numbers that self.registers[4]
+                # is even divisible with. So we only need to search for the lower
+                # half of the numbers, since the biggest number we can find (except
+                # the number itself) is x where x = self.registers[4] // 2.
                 self.registers[3] = 1
-                while self.registers[3] <= self.registers[4]:
+                while self.registers[3] <= self.registers[4] // 2:
                     if self.registers[4] % self.registers[3] == 0:
                         self.registers[0] += self.registers[3]
                     self.registers[3] += 1
+                # Need to append the number itself manually since we skipped it in
+                # the loop above.
+                self.registers[0] += self.registers[4]
                 self.registers[1] = self.registers[4] + 1
                 self.registers[2] = 16
+                self.registers[3] = self.registers[4] + 1
                 self.registers[5] = 1
                 self.ip = 16
                 continue
