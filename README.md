@@ -33,3 +33,5 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 21: Chronal Conversion](http://adventofcode.com/2018/day/21) | [day21.py](days/day21.py) | Found some lines that is freequently called. Working on a smarter method to speed up the execution. |
 |[Day 22: Mode Maze](http://adventofcode.com/2018/day/22) | [day22.py](days/day22.py) | --- |
 |[Day 23: Experimental Emergency Teleportation](http://adventofcode.com/2018/day/23) | [day23.py](days/day23.py) | part b todo |
+|[Day 24: Immune System Simulator 20XX](http://adventofcode.com/2018/day/24) | [day24.py](days/day24.py) | --- |
+|[Day 25: Four-Dimensional Adventure](http://adventofcode.com/2018/day/25) | [day25.py](days/day25.py) | --- |
