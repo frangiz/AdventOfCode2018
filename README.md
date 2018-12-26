@@ -28,7 +28,7 @@ Execute with `python run_tests.py`. The script is able to run a single day and/o
 |[Day 16: Chronal Classification](http://adventofcode.com/2018/day/16) | [day16.py](days/day16.py) | --- |
 |[Day 17: Reservoir Research](http://adventofcode.com/2018/day/17) | [day17.py](days/day17.py) | --- |
 |[Day 18: Settlers of The North Pole](http://adventofcode.com/2018/day/18) | [day18.py](days/day18.py) | --- |
-|[Day 19: Go With The Flow](http://adventofcode.com/2018/day/19) | [day19.py](days/day19.py) | Part b TODO |
+|[Day 19: Go With The Flow](http://adventofcode.com/2018/day/19) | [day19.py](days/day19.py) | No general solution. |
 |[Day 20: A Regular Map](http://adventofcode.com/2018/day/20) | [day20.py](days/day20.py) | --- |
 |[Day 21: Chronal Conversion](http://adventofcode.com/2018/day/21) | [day21.py](days/day21.py) | Found some lines that is freequently called. Working on a smarter method to speed up the execution. |
 |[Day 22: Mode Maze](http://adventofcode.com/2018/day/22) | [day22.py](days/day22.py) | --- |
