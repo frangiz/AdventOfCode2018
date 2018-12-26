@@ -63,59 +63,16 @@ class Device():
         self.registers[c] = 1 if self.registers[a] == self.registers[b] else 0
 
     def run(self):
-        lines_executed = defaultdict(int)
-        counter = 0
-        while 0 <= self.ip < len(self.instructions):
-            op, a, b, c = self.instructions[self.ip].split()
-            self.registers[self.ip_register] = self.ip
-            self.cmds[op](int(a), int(b), int(c))
-            self.ip = self.registers[self.ip_register] + 1
-            lines_executed[self.ip] += 1
-            counter += 1
-            if self.ip == 28:
-                print(self.registers)
-            if self.registers[4] > self.registers[2]:
-                print(self.registers)
-                #print(lines_executed)
-                
-            #print('ip: {},  ip_register: {} -> {}'.format(self.ip, self.ip_register, self.registers))
-            '''
-                #ip 5
-                seti 123 0 3     <-- registers[3] = 123
-                bani 3 456 3     <-- registers[3] = registers[3] & 456
-                eqri 3 72 3      <-- registers[3] = registerse[3] == 72
-                addr 3 5 5       <-- registers[5] += registers[3]
-                seti 0 0 5       <-- registers[5] = 0
-                5:  seti 0 5 3   <-- registers[3] = 0
-                bori 3 65536 2   <-- registers[2] = registers[3] | 65536
-                seti 832312 1 3  <-- registers[3] = 832312
-                bani 2 255 1     <-- registers[1] = registers[2] & 0xFF
-                addr 3 1 3       <-- registers[3] += registers[1]
-                10: bani 3 16777215 3 <-- registers[3] = registers[3] & 0xFFFFFF
-                muli 3 65899 3      <-- registers[3] = registers[3] * 65899
-                bani 3 16777215 3   <-- registers[3] = registers[3] & 0xFFFFFF
-                gtir 256 2 1        <-- registers[1] = 256 > registers[2]
-                addr 1 5 5          <-- registers[5] += registers[1]
-                15: addi 5 1 5      <-- registers[5] += 1
-                seti 27 7 5         <-- registers[5] = 27
-                17: seti 0 2 1      <-- registers[1] = 0
+        while self.step():
+            pass
 
-                Spending lots of time in lines 18-25
-                addi 1 1 4      <-- registers[4] = registers[1] + 1
-                muli 4 256 4    <-- registers[4] *= 256
-                gtrr 4 2 4      <-- registers[4] = registers[4] > registers[2]
-                addr 4 5 5      <-- registers[5] += registers[4]
-                22: addi 5 1 5  <-- registers[5] += 1
-                seti 25 1 5     <-- registers[5] = 25 # <-- break the loop?
-                addi 1 1 1      <-- registers[1] += 1
-                25: seti 17 0 5 <-- registers[5] = 17 # jump back to 18
+    def step(self):
+        op, a, b, c = self.instructions[self.ip].split()
+        self.registers[self.ip_register] = self.ip
+        self.cmds[op](int(a), int(b), int(c))
+        self.ip = self.registers[self.ip_register] + 1
+        return 0 <= self.ip < len(self.instructions)
 
-                setr 1 7 2      <-- registers[2] = registers[1]
-                seti 7 2 5      <-- registers[5] = 7
-                eqrr 3 0 1      <-- registers[1] = registers[3] == registers[0] <-- part a => what is registers[3] here?
-                addr 1 5 5      <-- registers[5] += registers[1]
-                seti 5 5 5      <-- registers[5] = 5
-            '''
 
 def part_a(puzzle_input):
     """
@@ -128,9 +85,13 @@ def part_a(puzzle_input):
 
     """
     d = Device(puzzle_input)
-    d.run()
-    print(d.registers)
-    return str(0)
+    # At instruction #28 we compare reg[3] with reg[0]. The result will be stored in reg[1].
+    # If they are equal, we will exit the loop with the next instruction. The lowest value
+    # that will break the loop is the first value in reg[3] when we do a compare the first
+    # time with reg[0].
+    while d.ip != 28:
+        d.step()
+    return str(d.registers[3])
 
 
 def part_b(puzzle_input):
