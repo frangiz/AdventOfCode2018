@@ -122,7 +122,7 @@ def part_b(puzzle_input):
         * an inner loop with instruction #2-11
         * an outer loop with instruction #1-15
     #ip 2
-    0 : addi 2 16 2     reg[2] += 16
+    0:  addi 2 16 2     reg[2] += 16
         seti 1 4 3      reg[3] = 1
                                                     \ while True:                         \
         seti 1 5 1      reg[1] = 1                  |     reg[1] = 1                      | if reg[4] % reg[3] == 0:

@@ -31,4 +31,4 @@ class MyTestCase(unittest.TestCase): # noqa D101
 
     def test_answer_part_b(self): # noqa D102
         result = day21.part_b(helpers.get_file_contents('day21.txt'))
-        self.assertEqual(result, '')
+        self.assertEqual(result, '9258470')
