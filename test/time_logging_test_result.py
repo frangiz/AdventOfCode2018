@@ -1,6 +1,7 @@
 import time
 from unittest.runner import TextTestResult
 
+
 class TimeLoggingTestResult(TextTestResult):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

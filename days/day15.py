@@ -10,9 +10,9 @@ class Team(enum.Enum):
 
 
 class Unit():
-    def __init__(self, pos, team):
+    def __init__(self, pos, team, attack_power=3):
         self.pos = pos
-        self.attack_power = 3
+        self.attack_power = attack_power
         self.hp = 200
         self.alive = True
         self.team = team
@@ -30,17 +30,17 @@ class Unit():
 
 
 class FightSimulator():
-    def __init__(self, puzzle_input):
+    def __init__(self, puzzle_input, elf_attack_power=3):
         self.units = []
         self.walls = set()
         self.round = 0
-        self.__parse_map(puzzle_input)
+        self.__parse_map(puzzle_input, elf_attack_power)
 
-    def __parse_map(self, puzzle_input):
+    def __parse_map(self, puzzle_input, elf_attack_power):
         for y in range(len(puzzle_input)):
             for x, c in enumerate(puzzle_input[y]):
                 if c == 'E':
-                    self.units.append(Unit(Point(x, y), Team.ELF))
+                    self.units.append(Unit(Point(x, y), Team.ELF, attack_power=elf_attack_power))
                 elif c == 'G':
                     self.units.append(Unit(Point(x, y), Team.GOBLIN))
                 elif c == '#':
@@ -50,7 +50,6 @@ class FightSimulator():
         complete_round = True
         for unit in sorted(self.units, key=lambda u: (u.pos.y, u.pos.x)):
             if unit.alive:
-                print('Activating unit: {}'.format(unit))
                 if self.__has_enemies(unit):
                     self.__try_move(unit)
                     self.__try_attack(unit)
@@ -72,9 +71,7 @@ class FightSimulator():
     def __get_adjacent_enemies(self, unit):
         adjacent_enemies = []
         for pos in get_adjecent_4(unit.pos):
-            enemy = next((e for e in self.units if
-                          e.team != unit.team and e.alive and 
-                          e.pos.x == pos.x and e.pos.y == pos.y), None)
+            enemy = next((e for e in self.units if e.team != unit.team and e.alive and e.pos == pos), None)
             if enemy:
                 adjacent_enemies.append(enemy)
         adjacent_enemies.sort(key=lambda u: (u.hp, u.pos.y, u.pos.x))
@@ -88,35 +85,35 @@ class FightSimulator():
                 unit.pos = path[1]
 
     def __find_closest_enemy(self, unit):
-        class Node:
-            def __init__(self, pos, length, parent):
-                self.pos = pos
-                self.length = length
-                self.parent = parent
-        unvisited = deque()
-        solution = None
-        targets = [u.pos for u in self.units if u.team != unit.team and u.alive]
-        unvisited.append(Node(unit.pos, 0, None))
-        visited = set()
+        frontier = deque()
+        start = Point(unit.pos.x, unit.pos.y)
+        frontier.append(start)
+        came_from = {}
+        came_from[start] = None
         team_mates = set([u.pos for u in self.units if u.team == unit.team and u.alive])
-        while unvisited:
-            node = unvisited.popleft()
-            if node.pos in targets:
-                solution = node
-                break
-            visited.add(node.pos)
-            for new_position in sorted(get_adjecent_4(node.pos), key=lambda p: (p.y, p.x)):
-                if new_position not in self.walls and new_position not in visited and new_position not in team_mates:
-                    unvisited.append(Node(new_position, node.length + 1, node))
-        if solution is None:
+        while frontier:
+            current = frontier.popleft()
+            for new_position in sorted(get_adjecent_4(current), key=lambda p: (p.y, p.x)):
+                if new_position not in self.walls and new_position not in came_from and new_position not in team_mates:
+                    frontier.append(new_position)
+                    came_from[new_position] = current
+        targets = []
+        for u in self.units:
+            if u.team != unit.team and u.alive:
+                targets.extend(get_adjecent_4(u.pos))
+        paths = []
+        for current in sorted(targets, key=lambda p: (p.y, p.x)):
+            if current in came_from:
+                path = []
+                while current != start:
+                    path.append(current)
+                    current = came_from[current]
+                path.append(start)
+                path.reverse()
+                paths.append(path)
+        if len(paths) == 0:
             return None
-        path = []
-        while node.parent is not None:
-            path.append(node.pos)
-            node = node.parent
-        path.append(node.pos)
-        path.reverse()
-        return path
+        return min(paths, key=len)
 
     def __is_open_space(self, pos):
         if pos in [unit.pos for unit in self.units if unit.alive]:
@@ -148,16 +145,9 @@ class FightSimulator():
     def calc_outcome(self):
         while True:
             self.tick()
-            elves_alive = len([e for e in self.units if e.team == Team.ELF and e.alive])
-            goblins_alive = len([g for g in self.units if g.team == Team.GOBLIN and g.alive])
-            print('elves: {}, goblins: {}'.format(elves_alive, goblins_alive))
             if len([e for e in self.units if e.team == Team.ELF and e.alive]) == 0:
-                print('rounds: {}'.format(self.round))
-                print(self.print())
                 return sum(g.hp for g in self.units if g.alive and g.team == Team.GOBLIN) * self.round
             if len([g for g in self.units if g.team == Team.GOBLIN and g.alive]) == 0:
-                print('rounds: {}'.format(self.round))
-                print(self.print())
                 return sum(e.hp for e in self.units if e.alive and e.team == Team.ELF) * self.round
         return 0
 
@@ -186,6 +176,18 @@ def part_b(puzzle_input):
         string: The answer for part_b.
 
     """
+    sim = FightSimulator(puzzle_input)
+    nbr_of_elves = len([e for e in sim.units if e.team == Team.ELF and e.alive])
+    for i in range(4, 5**10):
+        sim = FightSimulator(puzzle_input, elf_attack_power=i)
+        while True:
+            sim.tick()
+            elves_alive = len([e for e in sim.units if e.team == Team.ELF and e.alive])
+            goblins_alive = len([g for g in sim.units if g.team == Team.GOBLIN and g.alive])
+            if elves_alive != nbr_of_elves:
+                break
+            if goblins_alive == 0:
+                return str(sum(e.hp for e in sim.units if e.alive and e.team == Team.ELF) * sim.round)
     return str(0)
 
 

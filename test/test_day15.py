@@ -59,11 +59,46 @@ class MyTestCase(unittest.TestCase): # noqa D101
 
     def test_answer_part_a(self): # noqa D102
         result = day15.part_a(helpers.get_file_contents('day15.txt'))
-        self.assertEqual(result, '')
+        self.assertEqual(result, '191575')
 
-    '''@data(
-        [],
-        [])
+    @data(
+        [['#######',
+          '#.G...#',
+          '#...EG#',
+          '#.#.#G#',
+          '#..G#E#',
+          '#.....#',
+          '#######'], '4988'],
+        [['#######',
+          '#E..EG#',
+          '#.#G.E#',
+          '#E.##E#',
+          '#G..#.#',
+          '#..E#.#',
+          '#######'], '31284'],
+        [['#######',
+          '#E.G#.#',
+          '#.#G..#',
+          '#G.#.G#',
+          '#G..#.#',
+          '#...E.#',
+          '#######'], '3478'],
+        [['#######',
+          '#.E...#',
+          '#.#..G#',
+          '#.###.#',
+          '#E#G#G#',
+          '#...#G#',
+          '#######'], '6474'],
+        [['#########',
+          '#G......#',
+          '#.E.#...#',
+          '#..##..G#',
+          '#...##..#',
+          '#...#...#',
+          '#.G...G.#',
+          '#.....G.#',
+          '#########'], '1140'])
     @unpack
     def test_example_b(self, test_input, expected): # noqa D102
         result = day15.part_b(test_input)
@@ -71,4 +106,4 @@ class MyTestCase(unittest.TestCase): # noqa D101
 
     def test_answer_part_b(self): # noqa D102
         result = day15.part_b(helpers.get_file_contents('day15.txt'))
-        self.assertEqual(result, '')'''
+        self.assertEqual(result, '75915')
